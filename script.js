@@ -59,8 +59,7 @@ function createCard(extension){
     card.addEventListener('change', (e) => {
         if (!e.target.matches('input[type="checkbox"]')) return;
         const ext = getCurrentExtension(e);
-        const status = e.target.checked
-        ext.ext.isActive = status;
+        ext.ext.isActive = e.target.checked;
         console.log(e.target.checked)
         console.log('Active status changed', data);
     });
@@ -95,7 +94,18 @@ function buildFilters(){
     const filterBar = document.querySelector('#filter');
     let grid = document.querySelector('#extensions');
     let exts = grid.querySelectorAll('.card');
+    let previousSelection;
     filterBar.addEventListener('click', (e) =>{
+        let selected = e.target;
+        if (selected && previousSelection){
+            previousSelection.classList.remove('selected');
+            selected.classList.add('selected');
+        } else if (selected && !previousSelection){
+            selected.classList.add('selected');
+        }
+        console.log(
+            e.target.textContent.toLowerCase()
+        )
         let filter = e.target.textContent.toLowerCase();
         switch(filter){
             case 'all':
@@ -132,5 +142,6 @@ function buildFilters(){
                 });
                 break;
         }
+        previousSelection = e.target;
     });
 }

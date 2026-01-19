@@ -117,13 +117,15 @@ main {
     border-radius: 16px;
     border: 1px solid #ccc;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 0 0.5rem;
+    height: 32px;
     background-color: hsl(200, 60%, 99%);
     color: hsl(225, 23%, 24%);
 }
 .btn:hover {
     background-color: hsl(3, 71%, 56%);
     color: hsl(200, 60%, 99%);
+    border: none;
 }
 
 .btn:focus, .tool-btn:focus, .ext-btn-bar input:focus-visible + span {
@@ -203,7 +205,6 @@ main {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 8px;
 }
 .ext-btn-bar button {
     max-width: 75px;
@@ -253,7 +254,10 @@ main {
 .hide {
     display: none;
 }
-
+.selected {
+    background-color: hsl(3, 71%, 56%);
+    color: hsl(200, 60%, 99%);
+}
 @media (300px <= width <= 600px){
     #extensions {
         grid-template-columns: repeat(1, 1fr);
