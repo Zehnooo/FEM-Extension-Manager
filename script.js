@@ -1,7 +1,15 @@
 console.log("Hello World");
 import data from './extension_manager/data.json' with { type: 'json' };
 console.log('initial data', data);
-
+const saved = localStorage.getItem('theme');
+if (saved === 'dark') {
+    document.body.classList.add('dark');
+    const logo = document.querySelector('#logo-img');
+    logo.src = './extension_manager/assets/images/darkmode-logo.svg';
+} else {
+    const logo = document.querySelector('#logo-img');
+    logo.src = './extension_manager/assets/images/logo.svg';
+}
 if(data.length === 0) {
     alert("No data found");
     emptyDefault();
@@ -12,6 +20,11 @@ if(data.length === 0) {
     data.forEach(createCard);
     console.log('updated data', data);
     buildFilters();
+    buildTools();
+    window.onload = () => {
+        console.log('loaded');
+        document.querySelector('#overlay').remove();
+    }
 }
 
 function emptyDefault(){
@@ -144,4 +157,30 @@ function buildFilters(){
         }
         previousSelection = e.target;
     });
+}
+
+function buildTools(){
+    const toolBar = document.querySelector('#tools');
+    const tools = toolBar.querySelectorAll('button');
+    tools.forEach(tool => {
+        tool.addEventListener("click", (e) => {
+            switch(e.target.id.toString()){
+                case 'theme':
+                    switchTheme();
+                    console.log('theme');
+                        break;
+                case 'search':
+                    console.log('search');
+                        break;
+            }
+        });
+    });
+}
+
+function switchTheme(){
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    const currentTheme = localStorage.getItem('theme');
+    const logo = document.querySelector('#logo-img');
+    currentTheme === 'dark' ? logo.src = './extension_manager/assets/images/darkmode-logo.svg' : logo.src = './extension_manager/assets/images/logo.svg';
 }
