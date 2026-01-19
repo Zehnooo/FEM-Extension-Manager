@@ -39,15 +39,47 @@ template{display:none}
     font-family: 'NotoSans';
     src: url('extension_manager/assets/fonts/NotoSans-VariableFont_wdth,wght.ttf');
 }
+/* Keyframes */
 
 
+:root {
+    --bodybg: linear-gradient(180deg, #EBF2FC 0%, #EEF8F9 100%);
+    --title: hsl(226, 25%, 17%);
+    --lighttext: hsl(226, 11%, 37%);
+    --border: hsl(217, 61%, 90%);
+    --bg: hsl(200, 60%, 99%);
+    --btn-text: hsl(225, 23%, 24%);
+    --attention: hsl(3, 71%, 56%);
+    --hovertext: hsl(200, 60%, 99%);
+    --switch: #ccc;
+}
+body.dark {
+    --bodybg: linear-gradient(180deg, #040918 0%, #091540 100%);
+    --title: hsl(200, 60%, 99%);
+    --lighttext: hsl(0, 0%, 93%);
+    --border: hsl(226, 11%, 37%);
+    --bg: hsl(226, 25%, 17%);
+    --btn-text: hsl(0, 0%, 93%);
+    --attention: hsl(3, 71%, 56%);
+    --hovertext: hsl(200, 60%, 99%);
+    --switch: hsl(226, 11%, 37%);
+}
 *, html {
     box-sizing: border-box;
 }
-
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: hsl(200, 60%, 99%);
+    z-index: 100;
+    transition: opacity 0.5s ease;
+}
 body {
     font-family: 'NotoSans', 'BlinkMacSystemFont', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(180deg, #EBF2FC 0%, #EEF8F9 100%);
+    background: var(--bodybg);
     background-size: cover;
     padding: 0;
     margin: 0;
@@ -58,14 +90,17 @@ main {
     padding-inline: 1rem;
 }
 #toolbar, .card {
-    background-color: #F5F5F5;
+    background-color: var(--bg);
 }
 #toolbar, #tools {
     display: flex;
     align-items: center;
 }
+body.dark #toolbar {
+    border: none;
+}
 #toolbar {
-    border: 1px solid #ccc;
+    border: var(--border) solid 1px;
     border-radius: 12px;
     width: 100%;
 }
@@ -86,8 +121,9 @@ main {
     background-color: transparent;
     border-radius: 12px;
 }
-#tools figure > * {
-    cursor: pointer;
+#tools figure button img {
+    cursor: none;
+    pointer-events: none;
 }
 #toolbar, #extensions, #heading {
     margin: 1rem 0;
@@ -99,9 +135,9 @@ main {
     width: 100%;
     margin: 2rem 0;
 }
-#heading h1 {
+#heading div h1 {
     margin: 0 0 0 1rem;
-    color: hsl(225, 23%, 24%);
+    color: var(--title);
 }
 #filter {
     gap: 1rem;
@@ -110,26 +146,34 @@ main {
     justify-content: center;
     align-items: center;
 }
+#filter button {
+    padding: 1rem;
+}
+.card .btn {
+    padding: 0 0.5rem;
+}
 .btn {
     text-align: center;
+    align-items: center;
+    justify-content: center;
     min-width: 75px;
     width: 100%;
     border-radius: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     cursor: pointer;
-    padding: 0 0.5rem;
+    display: inline-flex;
     height: 32px;
-    background-color: hsl(200, 60%, 99%);
-    color: hsl(225, 23%, 24%);
+    background-color: var(--bg);
+    color: var(--btn-text);
 }
 .btn:hover {
-    background-color: hsl(3, 71%, 56%);
-    color: hsl(200, 60%, 99%);
+    background-color: var(--attention);
+    color: var(--hovertext);
     border: none;
 }
 
 .btn:focus, .tool-btn:focus, .ext-btn-bar input:focus-visible + span {
-    outline: 2px solid hsl(3, 71%, 56%);
+    outline: 2px solid var(--attention);
     outline-offset: 2px;
     border: none;
 }
@@ -141,7 +185,6 @@ main {
     border-radius: 16px;
     cursor: pointer;
     padding: 0.75rem;
-    color: hsl(225, 23%, 24%);
     background-color: hsl(0, 0%, 89%);
 }
 #extensions {
@@ -155,25 +198,25 @@ main {
 
 .card {
     width: 100%;
-    border: 1px solid hsl(217, 61%, 90%);
+    border: 1px solid var(--border);
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     min-height: 200px;
     height: auto;
     justify-content: space-between;
-    background-color: hsl(200, 60%, 99%);
+
 }
 .card > div {
     padding: 16px;
 }
 .card p {
     font-size: 16px;
-    color: hsl(226, 11%, 37%);
+    color: var(--lighttext);
     line-height: 1.5;
 }
 .card h2 {
-    color: hsl(226, 25%, 17%);
+    color: var(--title);
     margin: 0 0 .5rem;
 }
 .ext-main {
@@ -227,7 +270,7 @@ main {
     width: 40px;
     height: 20px;
     border-radius: 999px;
-    background: #ccc;
+    background: var(--switch);
     position: relative;
     transition: background 0.2s ease;
 
@@ -245,7 +288,7 @@ main {
     cursor: pointer;
 }
 .ext-btn-bar input:checked + span {
-    background: hsl(3, 71%, 56%);
+    background: var(--attention);
 }
 .ext-btn-bar input:checked + span::before {
     transform: translateX(20px);
@@ -255,8 +298,15 @@ main {
     display: none;
 }
 .selected {
-    background-color: hsl(3, 71%, 56%);
-    color: hsl(200, 60%, 99%);
+    background-color: var(--attention);
+    color: var(--hovertext);
+}
+.fade-out {
+    opacity: 0;
+}
+body.dark .selected {
+    background-color: var(--attention);
+    color: var(--hovertext);
 }
 @media (300px <= width <= 600px){
     #extensions {
