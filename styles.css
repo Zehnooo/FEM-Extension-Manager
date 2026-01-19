@@ -48,7 +48,9 @@ template{display:none}
 body {
     font-family: 'NotoSans', 'BlinkMacSystemFont', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     background: linear-gradient(180deg, #EBF2FC 0%, #EEF8F9 100%);
-
+    background-size: cover;
+    padding: 0;
+    margin: 0;
 }
 main {
     max-width: 1200px;
@@ -118,6 +120,10 @@ main {
     padding: 0.5rem;
     background-color: hsl(200, 60%, 99%);
     color: hsl(225, 23%, 24%);
+}
+.btn:hover {
+    background-color: hsl(3, 71%, 56%);
+    color: hsl(200, 60%, 99%);
 }
 #filter .btn:focus {
     outline: none;
@@ -193,12 +199,14 @@ main {
     display: inline-flex;
     align-items: center;
     position: relative;
+
 }
 .ext-btn-bar input {
     position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
+
 }
 .ext-btn-bar span {
     width: 40px;
@@ -207,6 +215,7 @@ main {
     background: #ccc;
     position: relative;
     transition: background 0.2s ease;
+
 }
 .ext-btn-bar span::before {
     content: "";
@@ -218,6 +227,7 @@ main {
     border-radius: 50%;
     background: white;
     transition: transform 0.2s ease;
+    cursor: pointer;
 }
 .ext-btn-bar input:checked + span {
     background: hsl(3, 71%, 56%);
