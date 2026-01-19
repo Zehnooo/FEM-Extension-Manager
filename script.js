@@ -1,7 +1,9 @@
 console.log("Hello World");
 import data from './extension_manager/data.json' with { type: 'json' };
 console.log('initial data', data);
+
 const saved = localStorage.getItem('theme');
+
 if (saved === 'dark') {
     document.body.classList.add('dark');
     const logo = document.querySelector('#logo-img');
@@ -10,6 +12,7 @@ if (saved === 'dark') {
     const logo = document.querySelector('#logo-img');
     logo.src = './extension_manager/assets/images/logo.svg';
 }
+
 if(data.length === 0) {
     alert("No data found");
     emptyDefault();
@@ -21,12 +24,8 @@ if(data.length === 0) {
     console.log('updated data', data);
     buildFilters();
     buildTools();
-    window.onload = () => {
-        console.log('loaded');
-        document.querySelector('#overlay').remove();
-    }
 }
-
+requestAnimationFrame(() => document.body.classList.add('ready'));
 function emptyDefault(){
     document.querySelector('#extensions').innerHTML = '';
 }
@@ -184,3 +183,4 @@ function switchTheme(){
     const logo = document.querySelector('#logo-img');
     currentTheme === 'dark' ? logo.src = './extension_manager/assets/images/darkmode-logo.svg' : logo.src = './extension_manager/assets/images/logo.svg';
 }
+

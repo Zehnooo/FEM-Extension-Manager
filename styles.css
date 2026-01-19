@@ -69,20 +69,27 @@ body.dark {
 }
 #overlay {
     position: fixed;
+    opacity: 1;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: hsl(200, 60%, 99%);
+    background-color: var(--bodybg);
     z-index: 100;
     transition: opacity 0.5s ease;
 }
+
 body {
     font-family: 'NotoSans', 'BlinkMacSystemFont', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     background: var(--bodybg);
     background-size: cover;
     padding: 0;
     margin: 0;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+body.ready {
+    opacity: 1;
 }
 main {
     max-width: 1200px;
@@ -301,9 +308,7 @@ body.dark #toolbar {
     background-color: var(--attention);
     color: var(--hovertext);
 }
-.fade-out {
-    opacity: 0;
-}
+
 body.dark .selected {
     background-color: var(--attention);
     color: var(--hovertext);
