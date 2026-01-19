@@ -83,7 +83,7 @@ main {
     width: min-content;
     margin: 0 12px;
     padding: 8px;
-    background-color: hsl(0, 0%, 89%);
+    background-color: transparent;
     border-radius: 12px;
 }
 #tools figure > * {
@@ -125,11 +125,22 @@ main {
     background-color: hsl(3, 71%, 56%);
     color: hsl(200, 60%, 99%);
 }
-#filter .btn:focus {
-    outline: none;
-    background-color: hsl(3, 71%, 56%);
-    color: hsl(200, 60%, 99%);
+
+.btn:focus, .tool-btn:focus, .ext-btn-bar input:focus-visible + span {
+    outline: 2px solid hsl(3, 71%, 56%);
+    outline-offset: 2px;
     border: none;
+}
+.tool-btn {
+    text-align: center;
+    min-width: 25px;
+    width: 100%;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    padding: 0.75rem;
+    color: hsl(225, 23%, 24%);
+    background-color: hsl(0, 0%, 89%);
 }
 #extensions {
     display: grid;
@@ -187,9 +198,12 @@ main {
     padding-top: 0;
 }
 .ext-btn-bar {
+    text-align: center;
+    align-items: center;
     width: 100%;
     display: flex;
     justify-content: space-between;
+    padding: 8px;
 }
 .ext-btn-bar button {
     max-width: 75px;
