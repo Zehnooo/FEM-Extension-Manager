@@ -104,11 +104,10 @@ function getCurrentExtension(e){
 
 function buildFilters(){
     const filterBar = document.querySelector('#filter');
-    let grid = document.querySelector('#extensions');
-    let exts = grid.querySelectorAll('.card');
     let previousSelection;
     filterBar.addEventListener('click', (e) =>{
         let selected = e.target;
+        if (!selected.matches('button')) return;
         if (selected && previousSelection){
             previousSelection.classList.remove('selected');
             selected.classList.add('selected');
@@ -119,41 +118,7 @@ function buildFilters(){
             e.target.textContent.toLowerCase()
         )
         let filter = e.target.textContent.toLowerCase();
-        switch(filter){
-            case 'all':
-                const allExts = data;
-                allExts.forEach(ext => {
-                    exts.forEach(extCard => {
-                        extCard.classList.remove('hide');
-                    });
-                })
-                exts.forEach(ext => ext.classList.remove('hide'));
-                break;
-
-            case 'active':
-                exts.forEach(ext => ext.classList.remove('hide'));
-                const inactiveExts = data.filter(ext => ext.isActive === false);
-                inactiveExts.forEach(ext => {
-                    exts.forEach(extCard => {
-                        if(extCard.dataset.id === ext.id){
-                            extCard.classList.add('hide');
-                        }
-                    });
-                });
-                break;
-
-            case 'inactive':
-                exts.forEach(ext => ext.classList.remove('hide'));
-                const activeExts = data.filter(ext => ext.isActive === true);
-                activeExts.forEach(ext => {
-                    exts.forEach(extCard => {
-                        if(extCard.dataset.id === ext.id){
-                            extCard.classList.add('hide');
-                        }
-                    });
-                });
-                break;
-        }
+        updateFilters(filter);
         previousSelection = e.target;
     });
 }
@@ -169,7 +134,7 @@ function buildTools(){
                     console.log('theme');
                         break;
                 case 'search':
-                    console.log('search');
+                    activateSearch(tool, toolBar);
                         break;
             }
         });
@@ -184,3 +149,73 @@ function switchTheme(){
     currentTheme === 'dark' ? logo.src = './extension_manager/assets/images/darkmode-logo.svg' : logo.src = './extension_manager/assets/images/logo.svg';
 }
 
+function getElementDimensions(el1, el2 = null){
+    const p = el1.getBoundingClientRect();
+    const e = el2.getBoundingClientRect();
+    return p ? {p, e} : {e}
+}
+
+function getSafeArea(dims){
+    if (dims.length === 1) console.error('Only one set of dimensions passed');
+    console.log('Element Dims', dims);
+    return {
+        right: dims.p.right - dims.e.right,
+        left: dims.p.left - dims.e.left,
+        bottom: dims.p.bottom - dims.e.bottom,
+        top: dims.p.top - dims.e.top
+    }
+
+}
+
+function activateSearch(tool, toolBar){
+    const safe = getSafeArea(getElementDimensions(toolBar, tool));
+    animateElement(tool, [
+        {transform: `translateX(0px)`},
+        {transform: `translateX(${safe.left}px)`}
+    ], {duration: 300, easing: 'ease-in-out', fill: 'forwards'})
+}
+
+function animateElement(el, keyframes, options){
+    el.animate(keyframes, options);
+
+}
+
+function updateFilters(filter){
+    let grid = document.querySelector('#extensions');
+    let exts = grid.querySelectorAll('.card');
+    switch(filter){
+        case 'all':
+            const allExts = data;
+            allExts.forEach(ext => {
+                exts.forEach(extCard => {
+                    extCard.classList.remove('hide');
+                });
+            })
+            exts.forEach(ext => ext.classList.remove('hide'));
+            break;
+
+        case 'active':
+            exts.forEach(ext => ext.classList.remove('hide'));
+            const inactiveExts = data.filter(ext => ext.isActive === false);
+            inactiveExts.forEach(ext => {
+                exts.forEach(extCard => {
+                    if(extCard.dataset.id === ext.id){
+                        extCard.classList.add('hide');
+                    }
+                });
+            });
+            break;
+
+        case 'inactive':
+            exts.forEach(ext => ext.classList.remove('hide'));
+            const activeExts = data.filter(ext => ext.isActive === true);
+            activeExts.forEach(ext => {
+                exts.forEach(extCard => {
+                    if(extCard.dataset.id === ext.id){
+                        extCard.classList.add('hide');
+                    }
+                });
+            });
+            break;
+    }
+}

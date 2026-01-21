@@ -113,13 +113,13 @@ body.dark #toolbar {
 }
 #toolbar #logo {
     padding: 12px;
-    width: 100%;
+    width: 50%;
     margin: 0 0 0 1rem;
 }
 #tools {
     justify-content: flex-end;
     padding: 12px;
-    width: min-content;
+    width: 50%;
 }
 #tools figure {
     width: min-content;
