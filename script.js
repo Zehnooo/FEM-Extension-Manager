@@ -1,34 +1,7 @@
-console.log("Hello World");
 import data from './extension_manager/data.json' with { type: 'json' };
-console.log('initial data', data);
+verifyTheme();
+verifyData(data);
 
-const saved = localStorage.getItem('theme');
-
-if (saved === 'dark') {
-    document.body.classList.add('dark');
-    const logo = document.querySelector('#logo-img');
-    const themeBtn = document.querySelector('#theme-icon');
-    logo.src = './extension_manager/assets/images/darkmode-logo.svg';
-    themeBtn.src = './extension_manager/assets/images/icon-sun.svg';
-} else {
-    const logo = document.querySelector('#logo-img');
-    const themeBtn = document.querySelector('#theme-icon');
-    logo.src = './extension_manager/assets/images/logo.svg';
-    themeBtn.src = './extension_manager/assets/images/icon-moon.svg';
-}
-
-if(data.length === 0) {
-    alert("No data found");
-    emptyDefault();
-} else {
-    data.forEach(extension => {
-        extension.id = crypto.randomUUID();
-    });
-    data.forEach(createCard);
-    console.log('updated data', data);
-    buildFilters();
-    buildTools();
-}
 requestAnimationFrame(() => document.body.classList.add('ready'));
 function emptyDefault(){
     document.querySelector('#extensions').innerHTML = '';
@@ -129,8 +102,9 @@ function buildFilters(){
 
 function buildTools(){
     const toolBar = document.querySelector('#tools');
-    const tools = toolBar.querySelectorAll('button');
-    tools.forEach(tool => {
+    const toolElements = toolBar.querySelectorAll('figure');
+    const toolBtns = toolBar.querySelectorAll('button');
+    toolBtns.forEach(tool => {
         tool.addEventListener("click", (e) => {
             switch(e.target.id.toString()){
                 case 'theme':
@@ -138,7 +112,7 @@ function buildTools(){
                     console.log('theme');
                         break;
                 case 'search':
-                    activateSearch(tool, toolBar);
+                    activateSearch(toolElements, toolBar);
                         break;
             }
         });
@@ -162,35 +136,46 @@ function switchTheme(){
     }
 }
 
-function getElementDimensions(el1, el2 = null){
+function getElementPosition(el1, el2 = null){
     const p = el1.getBoundingClientRect();
     const e = el2.getBoundingClientRect();
-    return p ? {p, e} : {e}
+    return e !== null ? {p, e} : {p}
 }
 
 function getSafeArea(dims){
-    if (dims.length === 1) console.error('Only one set of dimensions passed');
+    if (dims.length !== 2) console.error('Not enough dimensions provided.');
     console.log('Element Dims', dims);
     return {
-        right: dims.p.right - dims.e.right,
-        left: dims.p.left - dims.e.left,
-        bottom: dims.p.bottom - dims.e.bottom,
-        top: dims.p.top - dims.e.top
+        right: dims.p.right - dims.e.right + 20,
+        left: dims.p.left - dims.e.left + 20,
+        bottom: dims.p.bottom - dims.e.bottom + 20,
+        top: dims.p.top - dims.e.top + 20
     }
 
 }
 
-function activateSearch(tool, toolBar){
-    const safe = getSafeArea(getElementDimensions(toolBar, tool));
-    animateElement(tool, [
+async function activateSearch(toolElements, toolBar){
+    const logo = document.querySelector('#logo');
+    const screen = getScreenSize();
+
+    if (screen.width < 650){
+        logo.classList.add('hide');
+        toolBar.classList.add('search');
+    }
+    const search = toolElements[0];
+    const safe = getSafeArea(getElementPosition(toolBar, search));
+    const animated = animateElement(search, [
         {transform: `translateX(0px)`},
         {transform: `translateX(${safe.left}px)`}
-    ], {duration: 300, easing: 'ease-in-out', fill: 'forwards'})
+    ], {duration: 750, easing: 'cubic-bezier(1, 0, 0, 1)', fill: 'forwards'});
+    await animationWait(animated);
+    // search.style.position = 'absolute';
+    toolBar.style.removeProperty('justify-content');
+    const input = insertElement('input', search, ['input']);
 }
 
 function animateElement(el, keyframes, options){
-    el.animate(keyframes, options);
-
+    return el.animate(keyframes, options);
 }
 
 function updateFilters(filter){
@@ -231,4 +216,55 @@ function updateFilters(filter){
             });
             break;
     }
+}
+
+function verifyTheme(){
+    const saved = localStorage.getItem('theme');
+
+    if (saved === 'dark') {
+        document.body.classList.add('dark');
+        const logo = document.querySelector('#logo-img');
+        const themeBtn = document.querySelector('#theme-icon');
+        logo.src = './extension_manager/assets/images/darkmode-logo.svg';
+        themeBtn.src = './extension_manager/assets/images/icon-sun.svg';
+    } else {
+        const logo = document.querySelector('#logo-img');
+        const themeBtn = document.querySelector('#theme-icon');
+        logo.src = './extension_manager/assets/images/logo.svg';
+        themeBtn.src = './extension_manager/assets/images/icon-moon.svg';
+    }
+}
+
+function verifyData(data){
+    if(data.length === 0) {
+        alert("No data found");
+        emptyDefault();
+    } else {
+        data.forEach(extension => {
+            extension.id = crypto.randomUUID();
+        });
+        data.forEach(createCard);
+        console.log('updated data', data);
+        buildFilters();
+        buildTools();
+    }
+}
+
+function getScreenSize(){
+    return {width: window.innerWidth, height: window.innerHeight};
+}
+
+function insertElement(newEl, targetEl, newElClasses){
+    const created = document.createElement(newEl);
+    if (typeof newElClasses === 'string'){
+        created.classList.add(newElClasses);
+    } else if (typeof newElClasses === 'object'){
+        newElClasses.forEach(newClass => created.classList.add(newClass));
+    }
+    targetEl.after(created);
+    return created;
+}
+
+function animationWait(animatedEl){
+    return animatedEl.finished;
 }
