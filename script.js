@@ -7,10 +7,14 @@ const saved = localStorage.getItem('theme');
 if (saved === 'dark') {
     document.body.classList.add('dark');
     const logo = document.querySelector('#logo-img');
+    const themeBtn = document.querySelector('#theme-icon');
     logo.src = './extension_manager/assets/images/darkmode-logo.svg';
+    themeBtn.src = './extension_manager/assets/images/icon-sun.svg';
 } else {
     const logo = document.querySelector('#logo-img');
+    const themeBtn = document.querySelector('#theme-icon');
     logo.src = './extension_manager/assets/images/logo.svg';
+    themeBtn.src = './extension_manager/assets/images/icon-moon.svg';
 }
 
 if(data.length === 0) {
@@ -144,9 +148,18 @@ function buildTools(){
 function switchTheme(){
     document.body.classList.toggle('dark');
     localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+
     const currentTheme = localStorage.getItem('theme');
     const logo = document.querySelector('#logo-img');
-    currentTheme === 'dark' ? logo.src = './extension_manager/assets/images/darkmode-logo.svg' : logo.src = './extension_manager/assets/images/logo.svg';
+    const themeBtn = document.querySelector('#theme-icon');
+
+    if (currentTheme === 'dark'){
+        logo.src = './extension_manager/assets/images/darkmode-logo.svg';
+        themeBtn.src = './extension_manager/assets/images/icon-sun.svg';
+    } else {
+        logo.src = './extension_manager/assets/images/logo.svg';
+        themeBtn.src = './extension_manager/assets/images/icon-moon.svg';
+    }
 }
 
 function getElementDimensions(el1, el2 = null){
