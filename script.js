@@ -22,7 +22,7 @@ function createCard(extension){
     let imgContainer = document.createElement('figure');
     let extImg = document.createElement('img');
     extImg.src = `${extension.logo}`;
-
+    extImg.alt = `${extension.name} logo`;
     let extName = document.createElement('h2');
     extName.textContent = `${extension.name}`;
 
@@ -37,10 +37,13 @@ function createCard(extension){
     removeBtn.textContent = 'Remove';
     removeBtn.classList.add('btn');
     removeBtn.id = 'remove-btn'
+
+
+
     let activeToggleLabel = document.createElement('label');
-
-
     let activeToggleBtn = document.createElement('input');
+    activeToggleBtn.id = 'toggle';
+    activeToggleLabel.htmlFor = 'toggle';
     activeToggleBtn.type = 'checkbox';
     extension.isActive === true ? activeToggleBtn.checked = true : activeToggleBtn.checked = false;
 
