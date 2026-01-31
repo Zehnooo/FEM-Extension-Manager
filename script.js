@@ -3,6 +3,7 @@ verifyTheme();
 verifyData(data);
 
 requestAnimationFrame(() => document.body.classList.add('ready'));
+
 function emptyDefault(){
     document.querySelector('#extensions').innerHTML = '';
 }
@@ -101,22 +102,12 @@ function buildFilters(){
 }
 
 function buildTools(){
-    const toolBar = document.querySelector('#tools');
-    const toolElements = toolBar.querySelectorAll('figure');
-    const toolBtns = toolBar.querySelectorAll('button');
-    toolBtns.forEach(tool => {
-        tool.addEventListener("click", (e) => {
-            switch(e.target.id.toString()){
-                case 'theme':
-                    switchTheme();
-                    console.log('theme');
-                        break;
-                case 'search':
-                    activateSearch(toolElements, toolBar);
-                        break;
-            }
-        });
+    const themeBtn = document.querySelector('#theme');
+    themeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        switchTheme();
     });
+
 }
 
 function switchTheme(){
@@ -134,48 +125,6 @@ function switchTheme(){
         logo.src = './extension_manager/assets/images/logo.svg';
         themeBtn.src = './extension_manager/assets/images/icon-moon.svg';
     }
-}
-
-function getElementPosition(el1, el2 = null){
-    const p = el1.getBoundingClientRect();
-    const e = el2.getBoundingClientRect();
-    return e !== null ? {p, e} : {p}
-}
-
-function getSafeArea(dims){
-    if (dims.length !== 2) console.error('Not enough dimensions provided.');
-    console.log('Element Dims', dims);
-    return {
-        right: dims.p.right - dims.e.right + 20,
-        left: dims.p.left - dims.e.left + 20,
-        bottom: dims.p.bottom - dims.e.bottom + 20,
-        top: dims.p.top - dims.e.top + 20
-    }
-
-}
-
-async function activateSearch(toolElements, toolBar){
-    const logo = document.querySelector('#logo');
-    const screen = getScreenSize();
-
-    if (screen.width < 650){
-        logo.classList.add('hide');
-        toolBar.classList.add('search');
-    }
-    const search = toolElements[0];
-    const safe = getSafeArea(getElementPosition(toolBar, search));
-    const animated = animateElement(search, [
-        {transform: `translateX(0px)`},
-        {transform: `translateX(${safe.left}px)`}
-    ], {duration: 750, easing: 'cubic-bezier(1, 0, 0, 1)', fill: 'forwards'});
-    await animationWait(animated);
-    // search.style.position = 'absolute';
-    toolBar.style.removeProperty('justify-content');
-    const input = insertElement('input', search, ['input']);
-}
-
-function animateElement(el, keyframes, options){
-    return el.animate(keyframes, options);
 }
 
 function updateFilters(filter){
@@ -248,23 +197,4 @@ function verifyData(data){
         buildFilters();
         buildTools();
     }
-}
-
-function getScreenSize(){
-    return {width: window.innerWidth, height: window.innerHeight};
-}
-
-function insertElement(newEl, targetEl, newElClasses){
-    const created = document.createElement(newEl);
-    if (typeof newElClasses === 'string'){
-        created.classList.add(newElClasses);
-    } else if (typeof newElClasses === 'object'){
-        newElClasses.forEach(newClass => created.classList.add(newClass));
-    }
-    targetEl.after(created);
-    return created;
-}
-
-function animationWait(animatedEl){
-    return animatedEl.finished;
 }
