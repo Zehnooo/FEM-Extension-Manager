@@ -37,13 +37,10 @@ function createCard(extension){
     removeBtn.textContent = 'Remove';
     removeBtn.classList.add('btn');
     removeBtn.id = 'remove-btn'
-
-
-
     let activeToggleLabel = document.createElement('label');
+
+
     let activeToggleBtn = document.createElement('input');
-    activeToggleBtn.id = 'toggle';
-    activeToggleLabel.htmlFor = 'toggle';
     activeToggleBtn.type = 'checkbox';
     extension.isActive === true ? activeToggleBtn.checked = true : activeToggleBtn.checked = false;
 
